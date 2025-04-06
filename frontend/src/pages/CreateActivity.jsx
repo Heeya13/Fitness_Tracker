@@ -12,7 +12,8 @@ const CreateActivity = () => {
     activity_type: '',
     calories_burnt: '',
     distance: '',
-    duration: '',
+    duration_hours: '',
+    duration_minutes: '',
   });
   const [success, setSuccess] = useState('');
   const [selectedGoal, setSelectedGoal] = useState(null);
@@ -60,7 +61,7 @@ const CreateActivity = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: ['calories_burnt', 'distance', 'duration'].includes(name) ? value : value
+      [name]: ['calories_burnt', 'distance', 'duration_hours', 'duration_minutes'].includes(name) ? value : value
     }));
   };
 
@@ -73,9 +74,9 @@ const CreateActivity = () => {
         return;
     }
 
-    // Convert minutes to MySQL TIME format (HH:MM:SS)
-    const hours = Math.floor(parseFloat(formData.duration) / 60);
-    const minutes = parseFloat(formData.duration) % 60;
+    // Convert hours and minutes to MySQL TIME format (HH:MM:SS)
+    const hours = parseInt(formData.duration_hours) || 0;
+    const minutes = parseInt(formData.duration_minutes) || 0;
     const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
 
     const activityData = {
@@ -199,20 +200,41 @@ const CreateActivity = () => {
           
           <div>
             <label className="block text-white font-bold mb-2" htmlFor="duration">
-              Duration (minutes)
+              Duration
             </label>
-            <input
-              type="number"
-              id="duration"
-              name="duration"
-              value={formData.duration}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-purple-500 text-white"
-              min="0"
-              step="1"
-              placeholder="Enter duration in minutes"
-              required
-            />
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <input
+                  type="number"
+                  id="duration_hours"
+                  name="duration_hours"
+                  value={formData.duration_hours}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-purple-500 text-white"
+                  min="0"
+                  step="1"
+                  placeholder="Enter hours"
+                  required
+                />
+                <label className="block text-gray-400 text-sm mt-1">Hours</label>
+              </div>
+              <div className="flex-1">
+                <input
+                  type="number"
+                  id="duration_minutes"
+                  name="duration_minutes"
+                  value={formData.duration_minutes}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-purple-500 text-white"
+                  min="0"
+                  max="59"
+                  step="1"
+                  placeholder="Enter minutes"
+                  required
+                />
+                <label className="block text-gray-400 text-sm mt-1">Minutes</label>
+              </div>
+            </div>
           </div>
 
           <div className="flex space-x-4">

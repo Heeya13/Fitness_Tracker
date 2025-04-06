@@ -53,6 +53,21 @@ const ViewActivities = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // Format duration from HH:MM:SS to a readable format
+  const formatDuration = (durationString) => {
+    if (!durationString) return '0m';
+    
+    // Parse the duration string (HH:MM:SS)
+    const [hours, minutes] = durationString.split(':').map(Number);
+    
+    // Format duration string
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes}m`;
+    }
+  };
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -127,7 +142,7 @@ const ViewActivities = () => {
                   <th className="px-4 py-3 text-left">Activity Type</th>
                   <th className="px-4 py-3 text-left">Calories</th>
                   <th className="px-4 py-3 text-left">Distance (km)</th>
-                  <th className="px-4 py-3 text-left">Duration (min)</th>
+                  <th className="px-4 py-3 text-left">Duration</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,7 +154,7 @@ const ViewActivities = () => {
                       <td className="px-4 py-3">{activity.activity_type}</td>
                       <td className="px-4 py-3">{activity.calories_burnt}</td>
                       <td className="px-4 py-3">{activity.distance}</td>
-                      <td className="px-4 py-3">{activity.duration}</td>
+                      <td className="px-4 py-3">{formatDuration(activity.duration)}</td>
                     </tr>
                   ))
                 }

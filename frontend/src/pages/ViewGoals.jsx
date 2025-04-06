@@ -70,37 +70,46 @@ const ViewGoals = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {goals.map((goal) => (
-              <div key={goal.goal_id} className="bg-gray-800 rounded-lg p-6 relative">
-                <h3 className="text-xl font-bold mb-3">{goalTypeLabels[goal.goal_type] || goal.goal_type}</h3>
-                <p className="mb-2">Target: {goal.target_value} {goalTypeUnits[goal.goal_type]}</p>
-                <p className="mb-4">Current Progress: {goal.current_value || 0} {goalTypeUnits[goal.goal_type]}</p>
-                
-                <div className="flex justify-between items-center mt-6">
-                  <button
-                    onClick={() => handleDeleteGoal(goal.goal_id)}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm"
-                  >
-                    Delete
-                  </button>
+            {goals.map((goal) => {
+              const isCompleted = goal.current_value >= goal.target_value;
+              const goalTypeLabel = goalTypeLabels[goal.goal_type] || goal.goal_type;
+              
+              return (
+                <div key={goal.goal_id} className="bg-gray-800 rounded-lg p-6 relative">
+                  <h3 className="text-xl font-bold mb-3">
+                    {isCompleted ? `${goalTypeLabel} - Completed` : goalTypeLabel}
+                  </h3>
+                  <p className="mb-2">Target: {goal.target_value} {goalTypeUnits[goal.goal_type]}</p>
+                  <p className="mb-4">Current Progress: {goal.current_value || 0} {goalTypeUnits[goal.goal_type]}</p>
                   
-                  <button
-                    onClick={() => handleCreateActivity(goal.goal_id)}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full text-xl absolute top-4 right-4"
-                    title="Add Activity"
-                  >
-                    +
-                  </button>
-                </div>
+                  <div className="flex justify-between items-center mt-6">
+                    <button
+                      onClick={() => handleDeleteGoal(goal.goal_id)}
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm"
+                    >
+                      Delete
+                    </button>
+                    
+                    {!isCompleted && (
+                      <button
+                        onClick={() => handleCreateActivity(goal.goal_id)}
+                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full text-xl absolute top-4 right-4"
+                        title="Add Activity"
+                      >
+                        +
+                      </button>
+                    )}
+                  </div>
 
-                <Link
-                  to={`/view-activities/${goal.goal_id}`}
-                  className="mt-4 text-purple-400 hover:text-purple-300 block"
-                >
-                  View Activities →
-                </Link>
-              </div>
-            ))}
+                  <Link
+                    to={`/view-activities/${goal.goal_id}`}
+                    className="mt-4 text-purple-400 hover:text-purple-300 block"
+                  >
+                    View Activities →
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
