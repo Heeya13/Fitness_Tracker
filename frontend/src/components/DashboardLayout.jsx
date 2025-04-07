@@ -7,7 +7,8 @@ const DashboardLayout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { user, logout } = useUserAuthStore();
+  const { user, logOut } = useUserAuthStore();
+  const [logoutMessage, setLogoutMessage] = useState('');
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -15,10 +16,21 @@ const DashboardLayout = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      navigate('/');
+      console.log('Logout button clicked');
+      console.log('Calling logOut function...');
+      await logOut();
+      console.log('Logout successful, navigating to home...');
+      setLogoutMessage('You have been logged out successfully!');
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
     } catch (error) {
       console.error('Logout failed:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
     }
   };
 
@@ -109,9 +121,19 @@ const DashboardLayout = ({ children }) => {
           <h2 className="text-xl font-semibold ml-12 lg:ml-0">Dashboard</h2>
           
           <div className="flex items-center">
+            {logoutMessage && (
+              <div className="bg-green-600 text-white px-4 py-2 rounded mr-4">
+                {logoutMessage}
+              </div>
+            )}
             <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('Button clicked');
+                handleLogout();
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer active:bg-red-800"
+              type="button"
             >
               Logout
             </button>

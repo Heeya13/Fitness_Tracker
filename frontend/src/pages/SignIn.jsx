@@ -59,16 +59,6 @@ const SignIn = () => {
             />
           </div>
 
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="text-purple-400 hover:text-purple-300 text-sm"
-              onClick={() => navigate('/forgot-password')}
-            >
-              Forgot Password?
-            </button>
-          </div>
-
           <button
             type="submit"
             className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded font-medium"
@@ -79,7 +69,7 @@ const SignIn = () => {
 
           {isAuthenticated && (
             navigate('/dashboard')
-)}
+          )}
         </form>
 
         <div className="mt-6 text-center">
